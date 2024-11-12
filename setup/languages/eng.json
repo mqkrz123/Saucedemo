@@ -1,0 +1,5 @@
+{
+    "loginPage.error.userLockedOut": "Epic sadface: Sorry, this user has been locked out.",
+    "loginPage.error.wrongCredentials": "Username and password do not match any user in this service"
+
+}
