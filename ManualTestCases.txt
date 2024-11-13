@@ -1,0 +1,93 @@
+Feature: login
+As any type of user I want to login with valid and/or invalid credentials
+
+Background:
+	Given I am on the login page
+@SmokeTest	
+Scenario: Successful Login As Standard_user
+  When I fill in "Username" with "standard_user"
+  And I fill in "Password" with "secret_sauce"
+  And I click on the "LOGIN" button
+  Then I should see the "Products" page
+  
+Scenario: Successful Login As Problem_user
+  When I fill in "Username" with "problem_user"
+  And I fill in "Password" with "secret_sauce"
+  And I click on the "LOGIN" button
+  Then I should see the "Products" page  
+  
+Scenario: Successful Login As Performance_glitch_user
+  When I fill in "Username" with "performance_glitch_user"
+  And I fill in "Password" with "secret_sauce"
+  And I click on the "LOGIN" button
+  Then I should see the "Products" page    
+
+Scenario: Failed Login As locked_out_user
+  When I fill in "Username" with "locked_out_user"
+  And I fill in "Password" with "secret_sauce"
+  And I click on the "LOGIN" button
+  Then I should see the error message: "Epic sadface: Sorry, this user has been locked out."
+  
+Scenario: Failed Login As Standard_user With Invalid Password
+  When I fill in "Username" with "standard_user"
+  And I fill in "Password" with "ohohoh"
+  And I click on the "LOGIN" button
+  Then I should see the error message: "Epic sadface: Username and password do not match any user in this service"
+  
+Scenario: Failed Login As Nonexisting User And Valid Password For All Users
+  When I fill in "Username" with "idontexist"
+  And I fill in "Password" with "secret_sauce"
+  And I click on the "LOGIN" button
+  Then I should see the error message: "Epic sadface: Username and password do not match any user in this service"
+
+Scenario: Failed Login With No Password   
+  When I fill in "Username" with "standard_user"
+  And I click on the "LOGIN" button
+  Then I should see the error message: "Epic sadface: Password is required"
+  
+Scenario: Failed Login With No Username   
+  When I fill in "Password" with "secret_sauce"
+  And I click on the "LOGIN" button
+  Then I should see the error message: "Epic sadface: Username is required"
+  
+Feature: sidebar menu
+As logged in user I want to check sidebar menu elements 
+
+Scenario: Open sidebar menu   
+  When I click sidebar menu button
+  Then I should see the sidebar with 4 list items visible: "All Items", "About", "Logout", "Reset App State" and the background page should be greyed-out
+
+Scenario: Click "All Items" list item
+  When I click "All Items" list item
+  Then I should be navigated to "Products" page
+  
+Scenario: Click "About" list item
+  When I click "About" list item
+  Then I should be navigated to "SauceLabs" page  
+
+Scenario: Click "Logout" list item
+  When I click "Logout" list item
+  Then I should be logged out and navigated to "Login" page
+
+Scenario: Click "Reset App State" list item
+  When I click "Reset App State" list item
+  Then nothing should happen
+  
+Scenario: Close sidebar menu by clicking Close Menu button  
+  When I click Close Menu button
+  Then the sidebar menu should be closed and disappear from the view and the background page should not be greyed-out anymore
+  
+Scenario: Close sidebar menu by clicking anywhere in the background  
+  When I click anywhere in the background 
+  Then the sidebar menu should be closed and disappear from the view and the background page should not be greyed-out anymore  
+
+Feature: Products page
+As a logged in user I want to check Products page
+
+Scenario: Check Products page UI elements
+  When I am in Products page
+  Then I should see sidebar menu icon, swaglabs header label, shopping cart, products header label, filters, products list with title, description, image, price and Add To Cart button and a footer with x, facebook and linkedin logos and text: "© 2020 Sauce Labs. All Rights Reserved. Terms of Service | Privacy Policy"
+  
+Scenario: Change filters
+  When I change the filter from default Name (A to Z) to Name (Z to A)
+  Then I see the changed products list order which matches the new filter
